@@ -1,6 +1,6 @@
 use byteorder::{BigEndian, WriteBytesExt};
 
-use crate::errors::encryption_error::EncryptionError;
+use crate::errors::EncryptionError;
 
 pub fn decrypt(encrypted: &mut Vec<u8>) -> String {
     let mut encrypted = (*encrypted.split_off(4)).to_vec();
@@ -23,7 +23,7 @@ pub fn encrypt(command: &str) -> Result<Vec<u8>, EncryptionError> {
     let mut payload: Vec<u8> = Vec::with_capacity(len);
     let result = encrypted.write_u32::<BigEndian>(len as u32);
     if result.is_err() {
-        return Err(EncryptionError);
+        return Err(EncryptionError::U32Error);
     }
     for i in 0..len {
         payload.push(raw_bytes[i] ^ key);
@@ -32,7 +32,7 @@ pub fn encrypt(command: &str) -> Result<Vec<u8>, EncryptionError> {
     for i in &payload {
         let result = encrypted.write_u8(*i);
         if result.is_err() {
-            return Err(EncryptionError);
+            return Err(EncryptionError::U8Error);
         }
     }
     Ok(encrypted)
