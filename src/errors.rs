@@ -21,11 +21,11 @@ impl Display for PlugError {
                 EncryptionError::U32Error => write!(f, "U32 Encryption Error"),
                 EncryptionError::U8Error => write!(f, "U8 Encryption Error"),
             },
-            PlugError::InvalidServerAddressError(ip) => write!(f, "Invalid Server IP: {}", ip),
+            PlugError::InvalidServerAddressError(ip) => write!(f, "Invalid Server IP: {ip}"),
             PlugError::JSONError => write!(f, "Invalid Response Data"),
             PlugError::ReadError => write!(f, "Stream Read Error"),
             PlugError::WriteError => write!(f, "Stream Write Error"),
-            PlugError::ServerConnectError(ip) => write!(f, "Error connecting to {}", ip),
+            PlugError::ServerConnectError(ip) => write!(f, "Error connecting to {ip}"),
         }
     }
 }

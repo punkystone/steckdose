@@ -21,6 +21,7 @@ pub fn encrypt(command: &str) -> Result<Vec<u8>, EncryptionError> {
     let mut encrypted = vec![];
     let mut key = 171;
     let mut payload: Vec<u8> = Vec::with_capacity(len);
+    #[allow(clippy::cast_possible_truncation)]
     let result = encrypted.write_u32::<BigEndian>(len as u32);
     if result.is_err() {
         return Err(EncryptionError::U32Error);
@@ -29,8 +30,8 @@ pub fn encrypt(command: &str) -> Result<Vec<u8>, EncryptionError> {
         payload.push(raw_bytes[i] ^ key);
         key = payload[i];
     }
-    for i in &payload {
-        let result = encrypted.write_u8(*i);
+    for i in payload {
+        let result = encrypted.write_u8(i);
         if result.is_err() {
             return Err(EncryptionError::U8Error);
         }

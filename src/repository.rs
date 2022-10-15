@@ -17,26 +17,26 @@ const ON_COMMAND: &str = "{\"system\":{\"set_relay_state\":{\"state\":1}}}";
 
 pub fn status(ip: &String) -> Result<bool, PlugError> {
     let result = &send_command(ip, INFO_COMMAND)?;
-    return match serde_json::from_str::<SystemInfo>(result) {
+    match serde_json::from_str::<SystemInfo>(result) {
         Ok(json) => Ok(json.system.get_sysinfo.relay_state == 1),
         Err(_) => Err(PlugError::JSONError),
-    };
+    }
 }
 
 pub fn off(ip: &String) -> Result<bool, PlugError> {
     let result = &send_command(ip, OFF_COMMAND)?;
-    return match serde_json::from_str::<DefaultResponse>(result) {
+    match serde_json::from_str::<DefaultResponse>(result) {
         Ok(json) => Ok(json.system.set_relay_state.err_code == 0),
         Err(_) => Err(PlugError::JSONError),
-    };
+    }
 }
 
 pub fn on(ip: &String) -> Result<bool, PlugError> {
     let result = &send_command(ip, ON_COMMAND)?;
-    return match serde_json::from_str::<DefaultResponse>(result) {
+    match serde_json::from_str::<DefaultResponse>(result) {
         Ok(json) => Ok(json.system.set_relay_state.err_code == 0),
         Err(_) => Err(PlugError::JSONError),
-    };
+    }
 }
 
 fn send_command(ip: &String, command: &str) -> Result<String, PlugError> {

@@ -1,3 +1,12 @@
+#![deny(
+    clippy::correctness,
+    clippy::suspicious,
+    clippy::style,
+    clippy::complexity,
+    clippy::pedantic,
+    clippy::perf
+)]
+#![allow(clippy::enum_variant_names)]
 use arguments::Arguments;
 use clap::Parser;
 
