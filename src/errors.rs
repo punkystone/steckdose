@@ -15,7 +15,7 @@ pub enum PlugError {
 }
 
 impl Display for PlugError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             PlugError::EncryptionError(encryption_error) => match encryption_error {
                 EncryptionError::U32Error => write!(f, "U32 Encryption Error"),

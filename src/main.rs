@@ -20,15 +20,15 @@ fn main() {
     let ip = args.ip;
     let action = args.action;
     match action {
-        arguments::Action::on => match repository::on(&ip) {
+        arguments::Action::on => match repository::on(ip) {
             Ok(response) => println!("{}", if response { "Success" } else { "Failure" }),
             Err(error) => eprintln!("{error}"),
         },
-        arguments::Action::off => match repository::off(&ip) {
+        arguments::Action::off => match repository::off(ip) {
             Ok(response) => println!("{}", if response { "Success" } else { "Failure" }),
             Err(error) => eprintln!("{error}"),
         },
-        arguments::Action::status => match repository::status(&ip) {
+        arguments::Action::status => match repository::status(ip) {
             Ok(response) => println!("{}", if response { "On" } else { "Off" }),
             Err(error) => eprintln!("{error}"),
         },
