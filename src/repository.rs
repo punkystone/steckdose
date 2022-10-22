@@ -8,6 +8,7 @@ use core::time::Duration;
 use std::{
     io::{Read, Write},
     net::{SocketAddr, TcpStream},
+    vec,
 };
 
 const DEFAULT_PORT: &str = "9999";
@@ -57,10 +58,12 @@ fn send_command(ip: String, command: &str) -> Result<String, PlugError> {
     if result.is_err() {
         return Err(PlugError::WriteError);
     }
-    let mut buffer: Vec<u8> = Vec::new();
-    let result = stream.read_to_end(&mut buffer);
-    if result.is_err() {
-        return Err(PlugError::ReadError);
+    let mut buffer: Vec<u8> = vec![0; 4069];
+    match stream.read(&mut buffer) {
+        Ok(length) => {
+            buffer = buffer[0..length].to_vec();
+            Ok(decrypt(&mut buffer))
+        }
+        Err(_) => Err(PlugError::ReadError),
     }
-    Ok(decrypt(&mut buffer))
 }
