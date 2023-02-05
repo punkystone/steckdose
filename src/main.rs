@@ -10,12 +10,14 @@
 use arguments::{Action, Arguments};
 use clap::Parser;
 use errors::PlugError;
+use util::emeter_to_table;
 
 mod arguments;
 mod encryption;
 mod errors;
 mod repository;
 mod responses;
+mod util;
 fn main() {
     let args = Arguments::parse();
     let ip = args.ip;
@@ -26,18 +28,34 @@ fn main() {
     }
 }
 
-fn match_action(action: &Action, ip: String) -> Result<&'static str, PlugError> {
+fn match_action(action: &Action, ip: String) -> Result<String, PlugError> {
     match action {
-        arguments::Action::on => match repository::on(ip) {
-            Ok(response) => Ok(if response { "Success" } else { "Failure" }),
+        Action::on => match repository::on(ip) {
+            Ok(response) => Ok(if response {
+                "Success".to_owned()
+            } else {
+                "Failure".to_owned()
+            }),
             Err(error) => Err(error),
         },
-        arguments::Action::off => match repository::off(ip) {
-            Ok(response) => Ok(if response { "Success" } else { "Failure" }),
+        Action::off => match repository::off(ip) {
+            Ok(response) => Ok(if response {
+                "Success".to_owned()
+            } else {
+                "Failure".to_owned()
+            }),
             Err(error) => Err(error),
         },
-        arguments::Action::status => match repository::status(ip) {
-            Ok(response) => Ok(if response { "On" } else { "Off" }),
+        Action::status => match repository::status(ip) {
+            Ok(response) => Ok(if response {
+                "On".to_owned()
+            } else {
+                "Off".to_owned()
+            }),
+            Err(error) => Err(error),
+        },
+        Action::emeter => match repository::emeter(ip) {
+            Ok(response) => return Ok(emeter_to_table(response)),
             Err(error) => Err(error),
         },
     }

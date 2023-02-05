@@ -1,8 +1,8 @@
 use crate::{
     encryption::{decrypt, encrypt},
     errors::PlugError,
-    responses::DefaultResponse,
     responses::SystemInfo,
+    responses::{DefaultResponse, EmeterResponse},
 };
 use core::time::Duration;
 use std::{
@@ -15,6 +15,15 @@ const DEFAULT_PORT: &str = "9999";
 const INFO_COMMAND: &str = "{\"system\":{\"get_sysinfo\":null}}";
 const OFF_COMMAND: &str = "{\"system\":{\"set_relay_state\":{\"state\":0}}}";
 const ON_COMMAND: &str = "{\"system\":{\"set_relay_state\":{\"state\":1}}}";
+const EMETER_COMMAND: &str = "{\"emeter\":{\"get_realtime\":{}}}";
+
+pub fn emeter(ip: String) -> Result<EmeterResponse, PlugError> {
+    let result = &send_command(ip, EMETER_COMMAND)?;
+    match serde_json::from_str::<EmeterResponse>(result) {
+        Ok(json) => Ok(json),
+        Err(_) => Err(PlugError::JSONError),
+    }
+}
 
 pub fn status(ip: String) -> Result<bool, PlugError> {
     let result = &send_command(ip, INFO_COMMAND)?;

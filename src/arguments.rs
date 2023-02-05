@@ -15,4 +15,5 @@ pub enum Action {
     on,
     off,
     status,
+    emeter,
 }
